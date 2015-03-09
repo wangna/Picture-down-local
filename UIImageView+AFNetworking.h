@@ -111,6 +111,11 @@
  Cancels any executing image operation for the receiver, if one exists.
  */
 - (void)cancelImageRequestOperation;
+- (BOOL) deleteDirInCache:(NSString *)dirName;
+
+- (NSString *)getImageWithUrl:(NSString *)dirName;
+
+- (void)downImageUrl:(NSString *)urlString withImage:(UIImage *)image;
 
 @end
 

@@ -221,6 +221,45 @@
     }
     return isCreated;
 }
+//该URL图片在本地的路径
+- (NSString *)getImageWithUrl:(NSString *)dirName
+{
+    NSString *imageDir = [self pathInCacheDirectory:[NSString stringWithFormat:@"WendaleCache/%@.jpg",[SecurityUtil encryptMD5String:dirName]]];
+    return imageDir;
+}
+// 删除图片缓存
+- (BOOL) deleteDirInCache:(NSString *)urlName
+{
+    //     NSString *imageDir = [self pathInCacheDirectory:dirName];
+    
+    NSString *imageDir = [self pathInCacheDirectory:[NSString stringWithFormat:@"WendaleCache/%@.jpg",[SecurityUtil encryptMD5String:dirName]]];
+    BOOL isDir = NO;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL existed = [fileManager fileExistsAtPath:imageDir isDirectory:&isDir];
+    bool isDeleted = false;
+    if (existed == YES )
+    {
+        isDeleted = [fileManager removeItemAtPath:imageDir error:nil];
+        NSDictionary *dict = [NSDictionary dictionary];
+        //        [[NSNotificationCenter defaultCenter] postNotificationName:kUpdateUserInfoImage object:nil userInfo:dict];
+    }
+    
+    return isDeleted;
+}
+//image代替存在的从urlString获取来的图片
+- (void)downImageUrl:(NSString *)urlString withImage:(UIImage *)image
+{
+    BOOL isDir = NO;
+    NSString *md5Url = [SecurityUtil encryptMD5String:urlString];
+    NSString *directoryPath = [self pathInCacheDirectory:@"WendaleCache"];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL existed = [fileManager fileExistsAtPath:directoryPath isDirectory:&isDir];
+    if ( isDir == YES && existed == YES ){
+        [UIImageJPEGRepresentation(image, 1.0) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", md5Url, @"jpg"]] options:NSAtomicWrite error:nil];
+    }
+}
+
 //沙箱目录
 -(NSString* )pathInCacheDirectory:(NSString *)fileName
 {
